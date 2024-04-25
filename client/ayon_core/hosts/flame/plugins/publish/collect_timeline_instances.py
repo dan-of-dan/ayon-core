@@ -150,7 +150,7 @@ class CollectTimelineInstances(pyblish.api.ContextPlugin):
                     task["name"]: {"type": task["type"]}
                     for task in self.add_tasks},
                 "representations": [],
-                "newAssetPublishing": True
+                "newFolderPublishing": True
             })
             self.log.debug("__ inst_data: {}".format(pformat(inst_data)))
 

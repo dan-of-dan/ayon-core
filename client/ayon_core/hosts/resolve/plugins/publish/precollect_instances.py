@@ -101,7 +101,7 @@ class PrecollectInstances(pyblish.api.ContextPlugin):
                 "fps": context.data["fps"],
                 "handleStart": handle_start,
                 "handleEnd": handle_end,
-                "newAssetPublishing": True,
+                "newFolderPublishing": True,
                 "families": ["clip"],
                 "productType": product_type,
                 "productName": product_name,

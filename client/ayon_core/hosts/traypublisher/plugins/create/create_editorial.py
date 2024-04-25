@@ -676,7 +676,7 @@ or updating already created. Publishing will create OTIO file.
             "shotName": shot_name,
             "variant": variant_name,
             "task": None,
-            "newAssetPublishing": True,
+            "newFolderPublishing": True,
             "trackStartFrame": track_start_frame,
             "timelineOffset": timeline_offset,
 

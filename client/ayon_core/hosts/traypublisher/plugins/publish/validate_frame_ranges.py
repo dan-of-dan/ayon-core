@@ -31,7 +31,7 @@ class ValidateFrameRange(OptionalPyblishPluginMixin,
             return
 
         # editorial would fail since they might not be in database yet
-        new_folder_publishing = instance.data.get("newAssetPublishing")
+        new_folder_publishing = instance.data.get("newFolderPublishing")
         if new_folder_publishing:
             self.log.debug("Instance is creating new folder. Skipping.")
             return

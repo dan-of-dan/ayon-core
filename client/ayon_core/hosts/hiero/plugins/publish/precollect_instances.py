@@ -140,7 +140,7 @@ class PrecollectInstances(pyblish.api.ContextPlugin):
 
                 # add all additional tags
                 "tags": phiero.get_track_item_tags(track_item),
-                "newAssetPublishing": True
+                "newFolderPublishing": True
             })
 
             # otio clip data

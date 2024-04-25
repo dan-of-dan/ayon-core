@@ -403,7 +403,7 @@ class CollectAnatomyInstanceData(pyblish.api.ContextPlugin):
             })
             return
 
-        if instance.data.get("newAssetPublishing"):
+        if instance.data.get("newFolderPublishing"):
             hierarchy = instance.data["hierarchy"]
             anatomy_data["hierarchy"] = hierarchy
 
@@ -440,14 +440,14 @@ class CollectAnatomyInstanceData(pyblish.api.ContextPlugin):
             # Fill task data
             # - if we're in editorial, make sure the task type is filled
             if (
-                not instance.data.get("newAssetPublishing")
+                not instance.data.get("newFolderPublishing")
                 or task_data["type"]
             ):
                 anatomy_data["task"] = task_data
                 return
 
         # New hierarchy is not created, so we can only skip rest of the logic
-        if not instance.data.get("newAssetPublishing"):
+        if not instance.data.get("newFolderPublishing"):
             return
 
         # Try to find task data based on hierarchy context and folder path
