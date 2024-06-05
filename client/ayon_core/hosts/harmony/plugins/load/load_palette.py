@@ -16,7 +16,7 @@ class ImportPaletteLoader(load.LoaderPlugin):
     label = "Import Palette"
 
     def load(self, context, name=None, namespace=None, data=None):
-        name = self.load_palette(context["representation"])
+        name = self.load_palette(context)
 
         return harmony.containerise(
             name,
@@ -28,14 +28,13 @@ class ImportPaletteLoader(load.LoaderPlugin):
 
     def load_palette(self, context):
         product_name = context["product"]["name"]
-        repre_entity = context["representation"]
         name = product_name.replace("palette", "")
 
         # Overwrite palette on disk.
         scene_path = harmony.send(
             {"function": "scene.currentProjectPath"}
         )["result"]
-        src = get_representation_path(repre_entity)
+        src = self.filepath_from_context(context)
         dst = os.path.join(
             scene_path,
             "palette-library",
