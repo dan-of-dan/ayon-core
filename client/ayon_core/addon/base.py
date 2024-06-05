@@ -42,7 +42,6 @@ IGNORED_DEFAULT_FILENAMES = (
 )
 IGNORED_HOSTS_IN_AYON = {
     "flame",
-    "harmony",
 }
 IGNORED_MODULES_IN_AYON = set()
 

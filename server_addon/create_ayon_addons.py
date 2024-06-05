@@ -36,7 +36,6 @@ IGNORE_FILE_PATTERNS: List[Pattern] = [
 
 IGNORED_HOSTS = [
     "flame",
-    "harmony",
 ]
 
 IGNORED_MODULES = []
