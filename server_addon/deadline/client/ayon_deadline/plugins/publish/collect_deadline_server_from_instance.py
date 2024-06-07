@@ -16,20 +16,15 @@ class CollectDeadlineServerFromInstance(pyblish.api.InstancePlugin):
     order = pyblish.api.CollectorOrder + 0.225
     label = "Deadline Webservice from the Instance"
     targets = ["local"]
-    families = ["render",
-                "rendering",
-                "render.farm",
-                "renderFarm",
-                "renderlayer",
-                "maxrender",
-                "usdrender",
+
+    families = ["render", "render.farm", "render.frames_farm",
+                "prerender", "prerender.farm", "prerender.frames_farm",
+                "renderlayer", "imagesequence", "image",
+                "vrayscene", "maxrender",
+                "arnold_rop", "mantra_rop",
+                "karma_rop", "vray_rop",
                 "redshift_rop",
-                "arnold_rop",
-                "mantra_rop",
-                "karma_rop",
-                "vray_rop",
-                "publish.hou",
-                "image"]  # for Fusion
+                "publish.hou", "usdrender", "renderFarm", "rendering"]
 
     def process(self, instance):
         if not instance.data.get("farm"):
