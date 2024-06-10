@@ -1,9 +1,7 @@
-from .version import __version__
 from .addon import RoyalRenderAddon
-
+from .version import __version__
 
 __all__ = (
-    "__version__",
-
     "RoyalRenderAddon",
+    "__version__",
 )

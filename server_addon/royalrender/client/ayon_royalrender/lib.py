@@ -111,7 +111,7 @@ class BaseCreateRoyalRenderJob(pyblish.api.InstancePlugin,
         if not self._rr_root:
             raise KnownPublishError(
                 ("Missing RoyalRender root. "
-                 "You need to configure RoyalRender module."))
+                 "Admin needs to configure RoyalRender module in Settings ."))
 
         self.rr_api = rrApi(self._rr_root)
 
@@ -176,6 +176,20 @@ class BaseCreateRoyalRenderJob(pyblish.api.InstancePlugin,
             instance, render_path, start_frame, end_frame)
         instance.data["expectedFiles"].extend(expected_files)
 
+        submitter_parameters = []
+
+        anatomy_data = instance.context.data["anatomyData"]
+        environment = RREnvList({
+            "AYON_PROJECT_NAME": instance.context.data["projectName"],
+            "AYON_FOLDER_PATH": instance.context.data["folderPath"],
+            "AYON_TASK_NAME": instance.context.data["task"],
+            "AYON_USERNAME": instance.context.data["user"],
+            "AYON_APP_NAME": os.environ["AYON_APP_NAME"],
+            "AYON_RENDER_JOB": "1",
+            "AYON_BUNDLE_NAME": os.environ["AYON_BUNDLE_NAME"]
+        })
+
+        render_dir = render_dir.replace("\\", "/")
         job = RRJob(
             Software="",
             Renderer="",
@@ -198,7 +212,10 @@ class BaseCreateRoyalRenderJob(pyblish.api.InstancePlugin,
             CompanyProjectName=instance.context.data["projectName"],
             ImageWidth=instance.data["resolutionWidth"],
             ImageHeight=instance.data["resolutionHeight"],
-            CustomAttributes=custom_attributes
+            CustomAttributes=custom_attributes,
+            SubmitterParameters=submitter_parameters,
+            rrEnvList=environment.serialize(),
+            rrEnvFile=os.path.join(render_dir, "rrEnv.rrEenv"),
         )
 
         return job
@@ -279,82 +296,3 @@ class BaseCreateRoyalRenderJob(pyblish.api.InstancePlugin,
             path = path.replace(first_frame, "#" * padding)
 
         return path
-
-    def inject_environment(self, instance, job):
-        # type: (pyblish.api.Instance, RRJob) -> RRJob
-        """Inject environment variables for RR submission.
-
-        This function mimics the behaviour of the Deadline
-        integration. It is just temporary solution until proper
-        runtime environment injection is implemented in RR.
-
-        Args:
-            instance (pyblish.api.Instance): Publishing instance
-            job (RRJob): RRJob instance to be injected.
-
-        Returns:
-            RRJob: Injected RRJob instance.
-
-        Throws:
-            RuntimeError: If any of the required env vars is missing.
-
-        """
-
-        temp_file_name = "{}_{}.json".format(
-            datetime.utcnow().strftime('%Y%m%d%H%M%S%f'),
-            str(uuid.uuid1())
-        )
-
-        export_url = os.path.join(tempfile.gettempdir(), temp_file_name)
-        print(">>> Temporary path: {}".format(export_url))
-
-        anatomy_data = instance.context.data["anatomyData"]
-        addons_manager = instance.context.data["ayonAddonsManager"]
-        applications_addon = addons_manager.get_enabled_addon("applications")
-
-        folder_key = "folder"
-        if applications_addon is None:
-            # Use 'asset' when applications addon command is not used
-            folder_key = "asset"
-
-        add_kwargs = {
-            "project": anatomy_data["project"]["name"],
-            folder_key: instance.context.data["folderPath"],
-            "task": anatomy_data["task"]["name"],
-            "app": instance.context.data.get("appName"),
-            "envgroup": "farm"
-        }
-
-        if not all(add_kwargs.values()):
-            raise RuntimeError((
-                "Missing required env vars: AYON_PROJECT_NAME, AYON_FOLDER_PATH,"
-                " AYON_TASK_NAME, AYON_APP_NAME"
-            ))
-
-        args = ["--headless"]
-        # Use applications addon to extract environments
-        # NOTE this is for backwards compatibility, the global command
-        #   will be removed in future and only applications addon command
-        #   should be used.
-        if applications_addon is not None:
-            args.extend(["addon", "applications"])
-
-        args.extend([
-            "extractenvironments",
-            export_url
-        ])
-
-        if os.getenv('IS_TEST'):
-            args.append("--automatic-tests")
-
-        for key, value in add_kwargs.items():
-            args.extend([f"--{key}", value])
-        self.log.debug("Executing: {}".format(" ".join(args)))
-        run_ayon_launcher_process(*args, logger=self.log)
-
-        self.log.debug("Loading file ...")
-        with open(export_url) as fp:
-            contents = json.load(fp)
-
-        job.rrEnvList = RREnvList(contents).serialize()
-        return job

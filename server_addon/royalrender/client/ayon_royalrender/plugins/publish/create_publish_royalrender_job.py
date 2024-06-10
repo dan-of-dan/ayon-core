@@ -65,6 +65,7 @@ class CreatePublishRoyalRenderJob(pyblish.api.InstancePlugin,
         "AYON_APP_NAME",
         "AYON_USERNAME",
         "AYON_SG_USERNAME",
+        "AYON_BUNDLE_NAME",
     ]
     priority = 50
 
@@ -191,8 +192,16 @@ class CreatePublishRoyalRenderJob(pyblish.api.InstancePlugin,
 
         # pass environment keys from self.environ_job_filter
         # and collect all pre_ids to wait for
+        job_environ = {}
         jobs_pre_ids = []
         for job in instance.data["rrJobs"]:  # type: RRJob
+            if job.rrEnvList:
+                if len(job.rrEnvList) > 2000:
+                    self.log.warning(("Job environment is too long "
+                                      f"{len(job.rrEnvList)} > 2000"))
+                job_environ.update(
+                    dict(RREnvList.parse(job.rrEnvList))
+                )
             jobs_pre_ids.append(job.PreID)
 
         priority = self.priority or instance.data.get("priority", 50)
@@ -209,7 +218,7 @@ class CreatePublishRoyalRenderJob(pyblish.api.InstancePlugin,
         ]
 
         job = RRJob(
-            Software="OpenPype",
+            Software="AYON",
             Renderer="Once",
             SeqStart=1,
             SeqEnd=1,
