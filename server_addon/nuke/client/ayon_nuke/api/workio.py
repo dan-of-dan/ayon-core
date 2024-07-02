@@ -6,7 +6,7 @@ from .utils import is_headless
 
 
 def file_extensions():
-    return [".nk"]
+    return [".nk", ".nkind"]
 
 
 def has_unsaved_changes():
