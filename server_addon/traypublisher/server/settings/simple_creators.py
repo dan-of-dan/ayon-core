@@ -58,6 +58,7 @@ DEFAULT_SIMPLE_CREATORS = [
             ".ma",
             ".mb",
             ".nk",
+            ".nkind",
             ".hrox",
             ".hip",
             ".hiplc",

@@ -332,7 +332,8 @@ DEFAULT_CREATORS = {
                 {
                     "name": "nuke",
                     "extensions": [
-                        ".nk"
+                        ".nk",
+                        ".nkind"
                     ]
                 }
             ]

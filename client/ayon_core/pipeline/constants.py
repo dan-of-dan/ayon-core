@@ -14,7 +14,7 @@ HOST_WORKFILE_EXTENSIONS = {
     "harmony": [".zip"],
     "houdini": [".hip", ".hiplc", ".hipnc"],
     "maya": [".ma", ".mb"],
-    "nuke": [".nk"],
+    "nuke": [".nk",".nkind"],
     "hiero": [".hrox"],
     "photoshop": [".psd", ".psb"],
     "premiere": [".prproj"],

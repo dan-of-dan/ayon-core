@@ -71,4 +71,4 @@ class NukeAddon(AYONAddon, IHostAddon):
         ]
 
     def get_workfile_extensions(self):
-        return [".nk"]
+        return [".nk", ".nkind"]
