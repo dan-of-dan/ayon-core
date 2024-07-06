@@ -283,7 +283,7 @@ def _install_menu():
     )
     menu.addSeparator()
     menu.addCommand(
-        "Set Resolution Test",
+        "Set Resolution",
         lambda: WorkfileSettings().reset_resolution()
     )
     menu.addCommand(
